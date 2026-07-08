@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Asistencia y Planilla Unificada</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Planilla">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2684/2684214.png">
+    <meta name="theme-color" content="#0f172a">
+    
+    <link rel="manifest" href="data:application/json;base64,ewogICJkZWZhdWx0X2xvY2FsZSI6ICJlcyIsCiAgIm5hbWUiOiAiQ29udHJvbCBkZSBBc2lzdGVuY2lhIHkgUGxhbmlsbGEiLAogICJzaG9ydF9uYW1lIjogIlBsYW5pbGxhIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQtcHJpbWFyeSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMTcyYSIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE3MmEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yNjg0LzI2ODQyMTQucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidXJwb3NlIjogImFueSBtYXJrYWJsZSIKICAgIH0KICBdCn0=">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel-bg: #1e293b;
+            --panel-border: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --success-hover: #059669;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --input-bg: #0f172a;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 20px 12px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        
+        .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        .main-panel { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1); }
+        
+        h2 { color: var(--text-main); font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--panel-border); padding-bottom: 8px; margin-top: 30px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        h2:first-of-type { margin-top: 0; }
+        
+        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        input, select { padding: 8px 12px; border: 1px solid var(--panel-border); border-radius: 6px; font-size: 0.9rem; color: var(--text-main); background-color: var(--input-bg); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); }
+        
+        .btn-group { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.2s ease; flex: 1; min-width: 170px; text-align: center; }
+        .btn:hover { background: var(--primary-hover); }
+        .btn:active { transform: scale(0.98); }
+        .btn-success { background: var(--success); }
+        .btn-success:hover { background: var(--success-hover); }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.15s ease; }
+        .btn-danger:hover { background: var(--danger-hover); }
+        .btn-clear-all { background: #475569; }
+        .btn-clear-all:hover { background: #334155; }
+        
+        .table-container { overflow-x: auto; border: 1px solid var(--panel-border); border-radius: 8px; margin-top: 10px; background: var(--input-bg); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--panel-border); }
+        th { background-color: rgba(51, 65, 85, 0.5); font-weight: 600; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: rgba(255, 255, 255, 0.02); }
+        .descanso-row td { background-color: rgba(51, 65, 85, 0.2)!important; color: #64748b; }
+        .descanso-row input, .descanso-row select { opacity: 0.5; }
+        
+        .payroll-box { background: var(--input-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 16px; margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+        .payroll-column { display: flex; flex-direction: column; gap: 8px; }
+        .payroll-row { display: flex; justify-content: space-between; font-size: 0.9rem; border-bottom: 1px dashed var(--panel-border); padding-bottom: 6px; align-items: center; }
+        .payroll-row span:first-child { color: var(--text-muted); }
+        .payroll-row span:last-child { font-weight: 600; color: var(--text-main); }
+        
+        .total-highlight-col { justify-content: center; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 14px; border-radius: 8px; }
+        .payroll-row.total { font-weight: 700; border: none; padding-bottom: 0; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+        .payroll-row.total span:first-child { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--primary); }
+        .payroll-row.total span:last-child { font-size: 1.5rem; color: var(--text-main); font-weight: 700; text-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+        
+        .history-section { border-top: none; padding-top: 24px; }
+        .history-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+        .history-item { padding: 12px 16px; border: 1px solid var(--panel-border); border-radius: 8px; background: var(--input-bg); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.2); font-size: 0.85rem; }
+        .history-item:hover { border-color: var(--primary); }
+        .history-details { color: var(--text-main); line-height: 1.4; }
+
+        .pdf-header { display: none; text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--primary); padding-bottom: 15px; }
+        .pdf-header h1 { font-size: 1.4rem; color: #0f172a; margin-bottom: 5px; text-transform: uppercase; }
+        .pdf-header p { font-size: 0.85rem; color: #475569; }
+
+        /* Banner de instalación nativo */
+        #pwa-install-banner { display: none; background: var(--primary); color: white; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; justify-content: space-between; align-items: center; font-size: 0.85rem; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div id="pwa-install-banner">
+        <span style="font-weight: 500;">✨ Puedes instalar esta planilla como una aplicación en tu dispositivo.</span>
+        <button class="btn btn-success" id="btn-pwa-instalar" style="min-width: auto; padding: 6px 14px; font-size: 0.8rem; background: #10b981;">Instalar App</button>
+    </div>
+
+    <div class="main-panel">
+        
+        <h2>1. Configuración de Parámetros</h2>
+        <div class="grid-inputs">
+            <div class="form-group">
+                <label>Nombre del Período</label>
+                <input type="text" id="param-nombre" value="Noviembre 2025" onchange="guardarEstadoActual()">
+            </div>
+            <div class="form-group">
+                <label>Desde</label>
+                <input type="date" id="param-fecha-inicio" value="2025-11-09" onchange="guardarEstadoActual()">
+            </div>
+            <div class="form-group">
+                <label>Hasta</label>
+                <input type="date" id="param-fecha-fin" value="2025-11-15" onchange="guardarEstadoActual()">
+            </div>
+        </div>
+        <div class="grid-inputs">
+            <div class="form-group">
+                <label>Sueldo Ordinario Quincenal</label>
+                <input type="number" id="param-sueldo" value="2052.50" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Valor Hora Extra (Q)</label>
+                <input type="number" id="param-hora-extra-val" value="25.6563" step="0.0001">
+            </div>
+            <div class="form-group">
+                <label>Beneficios MCD Quincenal</label>
+                <input type="number" id="param-beneficios" value="175.00" step="0.01">
+            </div>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn btn-success" onclick="generarCalendarioPeriodo(false)">Generar Nueva Semana</button>
+            <button class="btn" style="background: #0284c7;" onclick="generarCalendarioPeriodo(true)">➕ Añadir días</button>
+            <button class="btn btn-clear-all" onclick="eliminarTodoElPeriodo()">Limpiar Pantalla</button>
+        </div>
+
+        <h2>2. Registro Diario y Horarios</h2>
+        <div class="table-container">
+            <table id="tabla-periodo">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo de Día</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Horas Extra</th>
+                        <th>Notas / Meta de ayer</th>
+                        <th style="text-align: center;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">No se han generado días para este período.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>3. Resumen de Liquidación</h2>
+        <div class="payroll-box">
+            <div class="payroll-column">
+                <div class="payroll-row">
+                    <span>Período Activo:</span>
+                    <span id="lbl-periodo-nombre" style="color: var(--primary);">Ninguno</span>
+                </div>
+                <div class="payroll-row">
+                    <span>Total Horas Extras:</span>
+                    <span id="lbl-total-horas-extras">0.00 hrs</span>
+                </div>
+                <div class="payroll-row">
+                    <span>Monto por Extras:</span>
+                    <span id="lbl-monto-extras">Q 0.00</span>
+                </div>
+                <div class="payroll-row" style="background: rgba(59,130,246,0.1); padding: 4px 8px; border-radius: 4px;">
+                    <span style="font-weight: 600; color: var(--primary);">Horas de Apoyo:</span>
+                    <input type="number" id="param-horas-apoyo" value="0" step="0.5" style="width: 60px; padding: 2px 4px; text-align: center; font-weight: bold;" oninput="calcularTotales(); guardarEstadoActual();">
+                </div>
+                <div class="payroll-row">
+                    <span>Monto por Apoyo:</span>
+                    <span id="lbl-monto-apoyo">Q 0.00</span>
+                </div>
+            </div>
+            <div class="payroll-column">
+                <div class="payroll-row">
+                    <span>Sueldo Base Calculado:</span>
+                    <span id="lbl-sueldo-ordinario">Q 0.00</span>
+                </div>
+                <div class="payroll-row">
+                    <span>Beneficios Calculados:</span>
+                    <span id="lbl-beneficios">Q 0.00</span>
+                </div>
+                <div class="payroll-row">
+                    <span>Sueldo Bruto Total:</span>
+                    <span id="lbl-subtotal">Q 0.00</span>
+                </div>
+                <div class="payroll-row" style="color: var(--danger);">
+                    <span>IGSS Guatemala (4.83%):</span>
+                    <span id="lbl-igss" style="color: var(--danger);">-Q 0.00</span>
+                </div>
+                <div class="payroll-row" style="color: var(--danger);">
+                    <span>Retención ISR:</span>
+                    <span id="lbl-isr" style="color: var(--danger);">-Q 0.00</span>
+                </div>
+            </div>
+            
+            <div class="payroll-column total-highlight-col">
+                <div class="payroll-row total">
+                    <span>Total Líquido a Recibir</span>
+                    <span id="lbl-total-neto">Q 0.00</span>
+                </div>
+                <button class="btn btn-success" style="margin-top: 12px; width: 100%; padding: 8px; font-size: 0.85rem;" onclick="guardarMesEnHistorial()">Cerrar y Guardar Quincena</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="main-panel history-section" id="bloque-exclusivo-pdf">
+        <div id="encabezado-pdf" class="pdf-header">
+            <h1>HISTORIAL DE PLANILLAS Y PERÍODOS LIQUIDADOS</h1>
+            <p>Reporte consolidado de cierres acumulados</p>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--panel-border); padding-bottom: 8px; margin-bottom: 16px;">
+            <h2 style="border: none; margin: 0; padding: 0;">4. Historial Guardado</h2>
+            <button class="btn" style="background: #475569; max-width: 200px; padding: 6px 12px; font-size: 0.8rem;" onclick="exportarHistorialAPDF()" data-html2canvas-ignore="true">📄 Exportar PDF</button>
+        </div>
+        
+        <div id="lista-historial" class="history-list"></div>
+    </div>
+
+</div>
+
+<script>
+    let periodoActual = {
+        nombre: "", fechaInicio: "", fechaFin: "", sueldo: 2052.50, horaExtraVal: 25.6563, beneficios: 175.00, horasApoyo: 0, dias: []
+    };
+
+    let historialCierres = JSON.parse(localStorage.getItem('historialPlanillas')) || [];
+
+    window.onload = function() {
+        renderHistorial();
+        
+        const estadoGuardado = localStorage.getItem('periodoActualGuardado');
+        if (estadoGuardado) {
+            periodoActual = JSON.parse(estadoGuardado);
+            if(periodoActual.horasApoyo === undefined) periodoActual.horasApoyo = 0;
+
+            document.getElementById('param-nombre').value = periodoActual.nombre || "";
+            document.getElementById('param-fecha-inicio').value = periodoActual.fechaInicio || "";
+            document.getElementById('param-fecha-fin').value = periodoActual.fechaFin || "";
+            document.getElementById('param-sueldo').value = periodoActual.sueldo;
+            document.getElementById('param-hora-extra-val').value = periodoActual.horaExtraVal;
+            document.getElementById('param-beneficios').value = periodoActual.beneficios;
+            document.getElementById('param-horas-apoyo').value = periodoActual.horasApoyo;
+            
+            renderTablaPeriodo();
+            calcularTotales();
+        }
+
+        document.getElementById('param-sueldo').addEventListener('input', (e) => { periodoActual.sueldo = parseFloat(e.target.value) || 0; calcularTotales(); guardarEstadoActual(); });
+        document.getElementById('param-hora-extra-val').addEventListener('input', (e) => { periodoActual.horaExtraVal = parseFloat(e.target.value) || 0; calcularTotales(); guardarEstadoActual(); });
+        document.getElementById('param-beneficios').addEventListener('input', (e) => { periodoActual.beneficios = parseFloat(e.target.value) || 0; calcularTotales(); guardarEstadoActual(); });
+    };
+
+    function guardarEstadoActual() {
+        periodoActual.horasApoyo = parseFloat(document.getElementById('param-horas-apoyo').value) || 0;
+        localStorage.setItem('periodoActualGuardado', JSON.stringify(periodoActual));
+    }
+
+    function generarCalendarioPeriodo(appendMode = false) {
+        const nombre = document.getElementById('param-nombre').value;
+        const inicioStr = document.getElementById('param-fecha-inicio').value;
+        const finStr = document.getElementById('param-fecha-fin').value;
+
+        if (!inicioStr || !finStr || !nombre) {
+            alert("Completa el nombre y el rango de fechas para proceder.");
+            return;
+        }
+
+        const fechaInicio = new Date(inicioStr + "T00:00:00");
+        const fechaFin = new Date(finStr + "T00:00:00");
+
+        if (fechaFin < fechaInicio) {
+            alert("La fecha final es menor que la de inicio.");
+            return;
+        }
+
+        periodoActual.nombre = nombre;
+        periodoActual.sueldo = parseFloat(document.getElementById('param-sueldo').value) || 0;
+        periodoActual.horaExtraVal = parseFloat(document.getElementById('param-hora-extra-val').value) || 0;
+        periodoActual.beneficios = parseFloat(document.getElementById('param-beneficios').value) || 0;
+        
+        if (!appendMode) {
+            periodoActual.dias = [];
+            periodoActual.fechaInicio = inicioStr;
+            periodoActual.horasApoyo = 0;
+            document.getElementById('param-horas-apoyo').value = 0;
+        }
+        
+        periodoActual.fechaFin = finStr;
+
+        let fechaAux = new Date(fechaInicio);
+        while (fechaAux <= fechaFin) {
+            const fechaFormateada = fechaAux.toISOString().split('T')[0];
+            
+            const yaExiste = periodoActual.dias.some(d => d.fecha === fechaFormateada);
+            if (!yaExiste) {
+                periodoActual.dias.push({
+                    fecha: fechaFormateada, tipo: "LABORAL", entrada: "06:00", salida: "14:00", horasExtras: 0.00, notes: ""
+                });
+            }
+            fechaAux.setDate(fechaAux.getDate() + 1);
+        }
+
+        periodoActual.dias.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+        renderTablaPeriodo();
+        calcularTotales();
+        guardarEstadoActual();
+    }
+
+    function eliminarTodoElPeriodo() {
+        if (periodoActual.dias.length === 0) {
+            alert("No hay ningún día cargado en este período.");
+            return;
+        }
+        if (confirm("¿Estás seguro de que deseas limpiar la pantalla actual? (Esto no borra tu historial de abajo).")) {
+            periodoActual.dias = [];
+            periodoActual.horasApoyo = 0;
+            document.getElementById('param-horas-apoyo').value = 0;
+            localStorage.removeItem('periodoActualGuardado');
+            renderTablaPeriodo();
+            calcularTotales();
+        }
+    }
+
+    function renderTablaPeriodo() {
+        const tbody = document.querySelector('#tabla-periodo tbody');
+        tbody.innerHTML = '';
+
+        if (periodoActual.dias.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">No se han generado días para este período.</td></tr>`;
+            return;
+        }
+
+        periodoActual.dias.forEach((dia, index) => {
+            const tr = document.createElement('tr');
+            if (dia.tipo === 'DESCANSO') tr.classList.add('descanso-row');
+
+            tr.innerHTML = `
+                <td><strong>${dia.fecha}</strong></td>
+                <td>
+                    <select onchange="cambiarTipoDia(${index}, this.value)">
+                        <option value="LABORAL" ${dia.tipo === 'LABORAL' ? 'selected' : ''}>Laboral</option>
+                        <option value="DESCANSO" ${dia.tipo === 'DESCANSO' ? 'selected' : ''}>Descanso</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="time" value="${dia.entrada}" ${dia.tipo === 'DESCANSO' ? 'disabled' : ''} onchange="actualizarHorasRow(${index}, 'entrada', this.value)">
+                </td>
+                <td>
+                    <input type="time" value="${dia.salida}" ${dia.tipo === 'DESCANSO' ? 'disabled' : ''} onchange="actualizarHorasRow(${index}, 'salida', this.value)">
+                </td>
+                <td id="row-extra-${index}" style="font-weight: 600; color: var(--success);">
+                    ${dia.tipo === 'DESCANSO' ? '-' : dia.horasExtras.toFixed(2) + ' hrs'}
+                </td>
+                <td>
+                    <input type="text" value="${dia.notas || ''}" placeholder="..." onchange="actualizarNotasRow(${index}, this.value)" style="padding: 4px 8px; font-size: 0.8rem;">
+                </td>
+                <td style="text-align: center;">
+                    <button class="btn-danger" onclick="eliminarDiaFila(${index})">✕</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function eliminarDiaFila(index) {
+        periodoActual.dias.splice(index, 1);
+        renderTablaPeriodo();
+        calcularTotales();
+        guardarEstadoActual();
+    }
+
+    function cambiarTipoDia(index, valor) {
+        periodoActual.dias[index].tipo = valor;
+        if (valor === 'DESCANSO') {
+            periodoActual.dias[index].horasExtras = 0;
+        } else {
+            recalcularDiaHoras(index);
+        }
+        renderTablaPeriodo();
+        calcularTotales();
+        guardarEstadoActual();
+    }
+
+    function actualizarHorasRow(index, campo, valor) {
+        periodoActual.dias[index][campo] = valor;
+        recalcularDiaHoras(index);
+        calcularTotales();
+        guardarEstadoActual();
+    }
+
+    function actualizarNotasRow(index, valor) {
+        periodoActual.dias[index].notas = valor;
+        guardarEstadoActual();
+    }
+
+    function recalcularDiaHoras(index) {
+        const dia = periodoActual.dias[index];
+        if (dia.tipo === 'DESCANSO') return;
+
+        const [hEntrada, mEntrada] = dia.entrada.split(':').map(Number);
+        const [hSalida, mSalida] = dia.salida.split(':').map(Number);
+        
+        let deminutos = hEntrada * 60 + mEntrada;
+        let dminutos = hSalida * 60 + mSalida;
+        
+        if (dminutos < deminutos) dminutos += 24 * 60;
+        
+        let totalHoras = (dminutos - deminutos) / 60;
+        dia.horasExtras = totalHoras > 8 ? (totalHoras - 8) : 0;
+        
+        document.getElementById(`row-extra-${index}`).innerText = `${dia.horasExtras.toFixed(2)} hrs`;
+    }
+
+    function calcularTotales() {
+        let totalHorasExtras = 0;
+        periodoActual.dias.forEach(dia => {
+            if (dia.tipo === 'LABORAL') totalHorasExtras += dia.horasExtras;
+        });
+
+        let diasTotalesGenerados = periodoActual.dias.length || 1;
+        
+        let sueldoProporcional = 0;
+        let beneficiosProporcionales = 0;
+
+        if (diasTotalesGenerados === 14 || diasTotalesGenerados === 15) {
+            sueldoProporcional = periodoActual.sueldo;
+            beneficiosProporcionales = periodoActual.beneficios;
+        } else {
+            let factorProporcional = diasTotalesGenerados / 15;
+            if(factorProporcional > 1) factorProporcional = 1; 
+
+            sueldoProporcional = periodoActual.sueldo * factorProporcional;
+            beneficiosProporcionales = periodoActual.beneficios * factorProporcional;
+        }
+
+        sueldoProporcional = Math.round(sueldoProporcional * 100) / 100;
+        const montoExtras = Math.round((totalHorasExtras * periodoActual.horaExtraVal) * 100) / 100;
+        
+        const horasApoyoInput = parseFloat(document.getElementById('param-horas-apoyo').value) || 0;
+        const montoApoyo = Math.round((horasApoyoInput * periodoActual.horaExtraVal) * 100) / 100;
+
+        const subtotal = Math.round((sueldoProporcional + montoExtras + montoApoyo + beneficiosProporcionales) * 100) / 100;
+        
+        const baseIgss = Math.round((sueldoProporcional + montoExtras + montoApoyo) * 100) / 100;
+        const igss = Math.round((baseIgss * 0.0483) * 100) / 100;
+        
+        let isr = 0;
+        if (subtotal > 3500) isr = 152.30;
+        else if (subtotal > 2500) isr = 35.96;
+
+        const liquido = subtotal - igss - isr;
+
+        document.getElementById('lbl-periodo-nombre').innerText = periodoActual.nombre || "Ninguno";
+        document.getElementById('lbl-total-horas-extras').innerText = `${totalHorasExtras.toFixed(2)} hrs`;
+        document.getElementById('lbl-monto-extras').innerText = `Q ${montoExtras.toFixed(2)}`;
+        document.getElementById('lbl-monto-apoyo').innerText = `Q ${montoApoyo.toFixed(2)}`;
+        document.getElementById('lbl-sueldo-ordinario').innerText = `Q ${sueldoProporcional.toFixed(2)}`;
+        document.getElementById('lbl-beneficios').innerText = `Q ${beneficiosProporcionales.toFixed(2)}`;
+        document.getElementById('lbl-subtotal').innerText = `Q ${subtotal.toFixed(2)}`;
+        document.getElementById('lbl-igss').innerText = `-Q ${igss.toFixed(2)}`;
+        document.getElementById('lbl-isr').innerText = `-Q ${isr.toFixed(2)}`;
+        document.getElementById('lbl-total-neto').innerText = `Q ${liquido.toFixed(2)}`;
+
+        periodoActual.totalesCalculados = { totalHorasExtras, liquido };
+    }
+
+    function guardarMesEnHistorial() {
+        if (!periodoActual.nombre || periodoActual.dias.length === 0) {
+            alert("No hay información en el período activo para ser guardada.");
+            return;
+        }
+
+        const horasApoyoInput = parseFloat(document.getElementById('param-horas-apoyo').value) || 0;
+        const totalExtrasAcumuladas = (parseFloat(periodoActual.totalesCalculados.totalHorasExtras) + horasApoyoInput).toFixed(2);
+
+        const nuevoCierre = {
+            id: Date.now(),
+            nombre: periodoActual.nombre,
+            desde: periodoActual.dias[0].fecha,
+            hasta: periodoActual.dias[periodoActual.dias.length - 1].fecha,
+            liquido: periodoActual.totalesCalculados.liquido.toFixed(2),
+            extras: totalExtrasAcumuladas
+        };
+
+        historialCierres.push(nuevoCierre);
+        localStorage.setItem('historialPlanillas', JSON.stringify(historialCierres));
+        
+        periodoActual.dias = [];
+        periodoActual.horasApoyo = 0;
+        document.getElementById('param-horas-apoyo').value = 0;
+        localStorage.removeItem('periodoActualGuardado');
+        
+        renderTablaPeriodo();
+        calcularTotales();
+        renderHistorial();
+        
+        alert("¡Quincena unificada archivada con éxito!");
+    }
+
+    function exportarHistorialAPDF() {
+        if (historialCierres.length === 0) {
+            alert("No hay ningún mes guardado en el historial para exportar.");
+            return;
+        }
+
+        const elementoHistorial = document.getElementById('bloque-exclusivo-pdf');
+        const header = document.getElementById('encabezado-pdf');
+        
+        header.style.display = 'block';
+
+        const colorOriginalBg = elementoHistorial.style.background;
+        const colorOriginalText = elementoHistorial.style.color;
+        elementoHistorial.style.background = '#ffffff';
+        elementoHistorial.style.color = '#000000';
+
+        const opcionesConfig = {
+            margin:       15,
+            filename:     `Historial_Planillas.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, logging: false, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opcionesConfig).from(elementoHistorial).save()
+            .then(() => {
+                header.style.display = 'none';
+                elementoHistorial.style.background = colorOriginalBg;
+                elementoHistorial.style.color = colorOriginalText;
+            })
+            .catch(err => {
+                console.error(err);
+                header.style.display = 'none';
+                elementoHistorial.style.background = colorOriginalBg;
+                elementoHistorial.style.color = colorOriginalText;
+            });
+    }
+
+    function renderHistorial() {
+        const contenedor = document.getElementById('lista-historial');
+        contenedor.innerHTML = '';
+
+        if (historialCierres.length === 0) {
+            contenedor.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 15px;">No hay cierres guardados en el historial todavía.</p>`;
+            return;
+        }
+
+        historialCierres.forEach((mes) => {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            div.innerHTML = `
+                <div class="history-details">
+                    <strong>Periodo ${mes.nombre}:</strong> del <span style="color: var(--primary); font-weight: 600;">${mes.desde}</span> al <span style="color: var(--primary); font-weight: 600;">${mes.hasta}</span> 
+                    &nbsp;|&nbsp; Extras Totales: <strong>${mes.extras} hrs</strong> 
+                    &nbsp;|&nbsp; Total Líquido: <strong style="color: var(--success);">Q ${mes.liquido}</strong>
+                </div>
+                <button class="btn-danger" style="padding: 4px 10px;" onclick="eliminarHistorial(${mes.id})" data-html2canvas-ignore="true">Borrar</button>
+            `;
+            contenedor.appendChild(div);
+        });
+    }
+
+    function eliminarHistorial(id) {
+        if (confirm("¿Deseas quitar este mes de tu historial permanente?")) {
+            historialCierres = historialCierres.filter(mes => mes.id !== id);
+            localStorage.setItem('historialPlanillas', JSON.stringify(historialCierres));
+            renderHistorial();
+        }
+    }
+
+    // MANEJADOR DE INSTALACIÓN PWA REAL
+    let deferredPrompt;
+    const bannerInstalacion = document.getElementById('pwa-install-banner');
+    const btnInstalar = document.getElementById('btn-pwa-instalar');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Previene la barra de instalación por defecto del navegador vieja
+        e.preventDefault();
+        // Guarda el evento para ejecutarlo cuando el usuario presione nuestro botón
+        deferredPrompt = e;
+        // Muestra el banner elegante superior de la aplicación
+        bannerInstalacion.style.display = 'flex';
+    });
+
+    btnInstalar.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        // Lanza el prompt nativo del sistema operativo (Android/Windows)
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to install prompt: ${outcome}`);
+        bannerInstalacion.style.display = 'none';
+        deferredPrompt = null;
+    });
+
+    window.addEventListener('appinstalled', () => {
+        // Oculta el banner una vez instalada con éxito
+        bannerInstalacion.style.display = 'none';
+        deferredPrompt = null;
+        console.log('¡Planilla instalada en el sistema con éxito!');
+    });
+
+    // REGISTRO DEL SERVICE WORKER ACTIVO (Obligatorio para que sea reconocible como App)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            const swCodigo = `
+                const CACHE_NAME = 'planilla-cache-v1';
+                self.addEventListener('install', (e) => { self.skipWaiting(); });
+                self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+                });
+            `;
+            const blob = new Blob([swCodigo], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl)
+                .then(reg => console.log("Service Worker Registrado Correctamente."))
+                .catch(err => console.log("Error al registrar SW:", err));
+        });
+    }
+</script>
+
+</body>
+</html>
