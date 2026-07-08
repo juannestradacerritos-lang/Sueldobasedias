@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2684/2684214.png">
     <meta name="theme-color" content="#0f172a">
     
-    <link rel="manifest" href="data:application/json;base64,ewogICJkZWZhdWx0X2xvY2FsZSI6ICJlcyIsCiAgIm5hbWUiOiAiQ29udHJvbCBkZSBBc2lzdGVuY2lhIHkgUGxhbmlsbGEiLAogICJzaG9ydF9uYW1lIjogIlBsYW5pbGxhIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQtcHJpbWFyeSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMTcyYSIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE3MmEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yNjg0LzI2ODQyMTQucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidXJwb3NlIjogImFueSBtYXJrYWJsZSIKICAgIH0KICBdCn0=">
+    <link rel="manifest" href="data:application/json;base64,ewogICJkZWZhdWx0X2xvY2FsZSI6ICJlcyIsCiAgIm5hbWUiOiAiQ29udHJvbCBkZSBBc2lzdGVuY2lhIHkgUGxhbmlsbGEiLAogICJzaG9ydF9uYW1lIjogIlBsYW5pbGxhIiwKICAic3RhcnRxdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQtcHJpbWFyeSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMTcyYSIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE3MmEiLAogICpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yNjg0LzI2ODQyMTQucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidXJwb3NlIjogImFueSBtYXJrYWJsZSIKICAgIH0KICBdCn0=">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
@@ -74,11 +74,11 @@
         .payroll-row span:last-child { font-weight: 600; color: var(--text-main); }
         
         .total-highlight-col { justify-content: center; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 14px; border-radius: 8px; }
-        .payroll-row.total { font-weight: 700; border: none; padding-bottom: 0; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+        .payroll-row total { font-weight: 700; border: none; padding-bottom: 0; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
         .payroll-row.total span:first-child { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--primary); }
         .payroll-row.total span:last-child { font-size: 1.5rem; color: var(--text-main); font-weight: 700; text-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
         
-        .history-section { border-top: none; padding-top: 24px; }
+        .history-section { padding-top: 24px; }
         .history-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
         .history-item { padding: 12px 16px; border: 1px solid var(--panel-border); border-radius: 8px; background: var(--input-bg); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.2); font-size: 0.85rem; }
         .history-item:hover { border-color: var(--primary); }
@@ -522,33 +522,74 @@
         const elementoHistorial = document.getElementById('bloque-exclusivo-pdf');
         const header = document.getElementById('encabezado-pdf');
         
+        const tituloSeccion = elementoHistorial.querySelector('h2');
+        const tarjetasHistorial = elementoHistorial.querySelectorAll('.history-item');
+        const textosDetalles = elementoHistorial.querySelectorAll('.history-details');
+        
         header.style.display = 'block';
 
         const colorOriginalBg = elementoHistorial.style.background;
         const colorOriginalText = elementoHistorial.style.color;
+        
         elementoHistorial.style.background = '#ffffff';
         elementoHistorial.style.color = '#000000';
+        if (tituloSeccion) tituloSeccion.style.color = '#0f172a';
+        
+        tarjetasHistorial.forEach(tarjeta => {
+            tarjeta.style.background = '#f8fafc';
+            tarjeta.style.borderColor = '#cbd5e1';
+        });
+        textosDetalles.forEach(texto => {
+            texto.style.color = '#334155';
+        });
 
         const opcionesConfig = {
             margin:       15,
             filename:     `Historial_Planillas.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, logging: false, useCORS: true },
+            html2canvas:  { 
+                scale: 2, 
+                logging: false, 
+                useCORS: true,
+                letterRendering: true,
+                scrollX: 0,
+                scrollY: 0
+            },
             jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
         };
 
-        html2pdf().set(opcionesConfig).from(elementoHistorial).save()
-            .then(() => {
-                header.style.display = 'none';
-                elementoHistorial.style.background = colorOriginalBg;
-                elementoHistorial.style.color = colorOriginalText;
-            })
-            .catch(err => {
-                console.error(err);
-                header.style.display = 'none';
-                elementoHistorial.style.background = colorOriginalBg;
-                elementoHistorial.style.color = colorOriginalText;
-            });
+        setTimeout(() => {
+            html2pdf().set(opcionesConfig).from(elementoHistorial).save()
+                .then(() => {
+                    header.style.display = 'none';
+                    elementoHistorial.style.background = colorOriginalBg;
+                    elementoHistorial.style.color = colorOriginalText;
+                    if (tituloSeccion) tituloSeccion.style.color = '';
+                    
+                    tarjetasHistorial.forEach(tarjeta => {
+                        tarjeta.style.background = '';
+                        tarjeta.style.borderColor = '';
+                    });
+                    textosDetalles.forEach(texto => {
+                        texto.style.color = '';
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    header.style.display = 'none';
+                    elementoHistorial.style.background = colorOriginalBg;
+                    elementoHistorial.style.color = colorOriginalText;
+                    if (tituloSeccion) tituloSeccion.style.color = '';
+                    
+                    tarjetasHistorial.forEach(tarjeta => {
+                        tarjeta.style.background = '';
+                        tarjeta.style.borderColor = '';
+                    });
+                    textosDetalles.forEach(texto => {
+                        texto.style.color = '';
+                    });
+                });
+        }, 300);
     }
 
     function renderHistorial() {
@@ -589,17 +630,13 @@
     const btnInstalar = document.getElementById('btn-pwa-instalar');
 
     window.addEventListener('beforeinstallprompt', (e) => {
-        // Previene la barra de instalación por defecto del navegador vieja
         e.preventDefault();
-        // Guarda el evento para ejecutarlo cuando el usuario presione nuestro botón
         deferredPrompt = e;
-        // Muestra el banner elegante superior de la aplicación
         bannerInstalacion.style.display = 'flex';
     });
 
     btnInstalar.addEventListener('click', async () => {
         if (!deferredPrompt) return;
-        // Lanza el prompt nativo del sistema operativo (Android/Windows)
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         console.log(`User response to install prompt: ${outcome}`);
@@ -608,13 +645,12 @@
     });
 
     window.addEventListener('appinstalled', () => {
-        // Oculta el banner una vez instalada con éxito
         bannerInstalacion.style.display = 'none';
         deferredPrompt = null;
         console.log('¡Planilla instalada en el sistema con éxito!');
     });
 
-    // REGISTRO DEL SERVICE WORKER ACTIVO (Obligatorio para que sea reconocible como App)
+    // REGISTRO DEL SERVICE WORKER ACTIVO
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             const swCodigo = `
