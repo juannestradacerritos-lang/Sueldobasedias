@@ -5,105 +5,224 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Asistencia y Planilla Unificada</title>
     
+    <!-- Configuración para compatibilidad PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Planilla">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2684/2684214.png">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#09090b">
     
-    <link rel="manifest" href="data:application/json;base64,ewogICJkZWZhdWx0X2xvY2FsZSI6ICJlcyIsCiAgIm5hbWUiOiAiQ29udHJvbCBkZSBBc2lzdGVuY2lhIHkgUGxhbmlsbGEiLAogICJzaG9ydF9uYW1lIjogIlBsYW5pbGxhIiwKICAic3RhcnRxdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQtcHJpbWFyeSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMTcyYSIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE3MmEiLAogICpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yNjg0LzI2ODQyMTQucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidXJwb3NlIjogImFueSBtYXJrYWJsZSIKICAgIH0KICBdCn0=">
+    <!-- Fuente moderna estilo Dashboard Financiero -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Manifiesto PWA -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJkZWZhdWx0X2xvY2FsZSI6ICJlcyIsCiAgIm5hbWUiOiAiQ29udHJvbCBkZSBBc2lzdGVuY2lhIHkgUGxhbmlsbGEiLAogICJzaG9ydF9uYW1lIjogIlBsYW5pbGxhIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQtcHJpbWFyeSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzA5MDkwYiIsCiAgInRoZW1lX2NvbG9yIjogIiMwOTA5MGIiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yNjg0LzI2ODQyMTQucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidXJwb3NlIjogImFueSBtYXJrYWJsZSIKICAgIH0KICBdCn0=">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --bg: #0f172a;
-            --panel-bg: #1e293b;
-            --panel-border: #334155;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            /* Paleta Fintech Dark */
+            --bg: #09090b; /* Zinc 950 */
+            --panel-bg: #18181b; /* Zinc 900 */
+            --panel-border: #27272a; /* Zinc 800 */
+            
+            /* Colores de acento */
+            --primary: #3b82f6; 
+            --primary-gradient: linear-gradient(135deg, #2563eb, #3b82f6);
+            --glow-primary: rgba(59, 130, 246, 0.4);
+            
             --success: #10b981;
-            --success-hover: #059669;
-            --danger: #ef4444;
-            --danger-hover: #dc2626;
-            --input-bg: #0f172a;
+            --success-gradient: linear-gradient(135deg, #059669, #10b981);
+            --glow-success: rgba(16, 185, 129, 0.4);
+            
+            --danger: #f43f5e;
+            --danger-gradient: linear-gradient(135deg, #e11d48, #f43f5e);
+            
+            /* Textos */
+            --text-main: #f4f4f5; /* Zinc 100 */
+            --text-muted: #a1a1aa; /* Zinc 400 */
+            
+            --input-bg: #09090b;
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); padding: 20px 12px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 25px 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
         
-        .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
         
-        .main-panel { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1); }
+        /* Paneles Estilo Cristal */
+        .main-panel { 
+            background: var(--panel-bg); 
+            border: 1px solid var(--panel-border); 
+            padding: 28px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3); 
+            position: relative;
+            overflow: hidden;
+        }
         
-        h2 { color: var(--text-main); font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--panel-border); padding-bottom: 8px; margin-top: 30px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        /* Titulos elegantes */
+        h2 { 
+            color: #ffffff; 
+            font-size: 1.15rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.08em; 
+            border-bottom: 2px solid var(--panel-border); 
+            padding-bottom: 10px; 
+            margin-top: 32px; 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
         h2:first-of-type { margin-top: 0; }
         
-        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        /* Grid y Formularios flotantes */
+        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
         label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
         
-        input, select { padding: 8px 12px; border: 1px solid var(--panel-border); border-radius: 6px; font-size: 0.9rem; color: var(--text-main); background-color: var(--input-bg); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }
-        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); }
+        input, select { 
+            padding: 10px 14px; 
+            border: 1px solid var(--panel-border); 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            font-weight: 500;
+            color: var(--text-main); 
+            background-color: var(--input-bg); 
+            transition: all 0.3s ease; 
+            width: 100%; 
+        }
+        input:focus, select:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 4px var(--glow-primary); 
+            transform: translateY(-1px);
+        }
         
-        .btn-group { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-        .btn { display: inline-flex; align-items: center; justify-content: center; background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.2s ease; flex: 1; min-width: 170px; text-align: center; }
-        .btn:hover { background: var(--primary-hover); }
-        .btn:active { transform: scale(0.98); }
-        .btn-success { background: var(--success); }
-        .btn-success:hover { background: var(--success-hover); }
-        .btn-danger { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.15s ease; }
-        .btn-danger:hover { background: var(--danger-hover); }
-        .btn-clear-all { background: #475569; }
-        .btn-clear-all:hover { background: #334155; }
+        /* Botones Neón */
+        .btn-group { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+        .btn { 
+            display: inline-flex; align-items: center; justify-content: center; 
+            background: var(--primary-gradient); 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            letter-spacing: 0.03em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            flex: 1; min-width: 170px; text-align: center; 
+            box-shadow: 0 4px 12px var(--glow-primary);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px var(--glow-primary); filter: brightness(1.1); }
+        .btn:active { transform: scale(0.97); }
         
-        .table-container { overflow-x: auto; border: 1px solid var(--panel-border); border-radius: 8px; margin-top: 10px; background: var(--input-bg); }
+        .btn-success { background: var(--success-gradient); box-shadow: 0 4px 12px var(--glow-success); }
+        .btn-success:hover { box-shadow: 0 6px 16px var(--glow-success); }
+        
+        .btn-danger { 
+            background: var(--danger-gradient); color: white; border: none; padding: 6px 12px; 
+            border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; 
+            transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(244, 63, 94, 0.3);
+        }
+        .btn-danger:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(244, 63, 94, 0.5); }
+        
+        .btn-clear-all { background: linear-gradient(135deg, #3f3f46, #52525b); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .btn-clear-all:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.4); }
+        
+        /* Tabla DataGrid Avanzada */
+        .table-container { overflow-x: auto; border: 1px solid var(--panel-border); border-radius: 12px; margin-top: 10px; background: var(--input-bg); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--panel-border); }
-        th { background-color: rgba(51, 65, 85, 0.5); font-weight: 600; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #1f1f22; transition: background 0.2s ease; }
+        th { background-color: #121214; font-weight: 700; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
         tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: rgba(255, 255, 255, 0.02); }
-        .descanso-row td { background-color: rgba(51, 65, 85, 0.2)!important; color: #64748b; }
-        .descanso-row input, .descanso-row select { opacity: 0.5; }
+        tr:hover td { background-color: #18181b; }
         
-        .payroll-box { background: var(--input-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 16px; margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-        .payroll-column { display: flex; flex-direction: column; gap: 8px; }
-        .payroll-row { display: flex; justify-content: space-between; font-size: 0.9rem; border-bottom: 1px dashed var(--panel-border); padding-bottom: 6px; align-items: center; }
-        .payroll-row span:first-child { color: var(--text-muted); }
-        .payroll-row span:last-child { font-weight: 600; color: var(--text-main); }
+        .descanso-row td { background-color: rgba(39, 39, 42, 0.3)!important; color: #52525b; }
+        .descanso-row input, .descanso-row select { opacity: 0.4; filter: grayscale(1); }
         
-        .total-highlight-col { justify-content: center; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 14px; border-radius: 8px; }
-        .payroll-row total { font-weight: 700; border: none; padding-bottom: 0; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
-        .payroll-row.total span:first-child { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--primary); }
-        .payroll-row.total span:last-child { font-size: 1.5rem; color: var(--text-main); font-weight: 700; text-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+        /* Caja de Nómina Estilo Banca Digital */
+        .payroll-box { 
+            background: linear-gradient(to bottom right, #121214, #09090b); 
+            border: 1px solid var(--panel-border); 
+            border-radius: 12px; 
+            padding: 20px; 
+            margin-top: 15px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 20px; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        }
+        .payroll-column { display: flex; flex-direction: column; gap: 10px; }
+        .payroll-row { display: flex; justify-content: space-between; font-size: 0.95rem; border-bottom: 1px dashed var(--panel-border); padding-bottom: 8px; align-items: center; }
+        .payroll-row span:first-child { color: var(--text-muted); font-weight: 500; }
+        .payroll-row span:last-child { font-weight: 700; color: var(--text-main); }
         
+        /* Resaltado del Total Líquido */
+        .total-highlight-col { 
+            justify-content: center; 
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(16, 185, 129, 0.05)); 
+            border: 1px solid rgba(59, 130, 246, 0.2); 
+            padding: 20px; 
+            border-radius: 12px; 
+            position: relative;
+        }
+        .total-highlight-col::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-top-left-radius: 12px; border-top-right-radius: 12px;
+        }
+        .payroll-row.total { font-weight: 800; border: none; padding-bottom: 0; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+        .payroll-row.total span:first-child { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary); }
+        .payroll-row.total span:last-child { font-size: 2.2rem; color: #ffffff; text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); letter-spacing: -0.02em; }
+        
+        /* Historial y PDF */
         .history-section { padding-top: 24px; }
-        .history-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-        .history-item { padding: 12px 16px; border: 1px solid var(--panel-border); border-radius: 8px; background: var(--input-bg); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.2); font-size: 0.85rem; }
-        .history-item:hover { border-color: var(--primary); }
-        .history-details { color: var(--text-main); line-height: 1.4; }
+        .history-list { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .history-item { 
+            padding: 16px 20px; 
+            border: 1px solid var(--panel-border); 
+            border-left: 4px solid var(--primary);
+            border-radius: 10px; 
+            background: #121214; 
+            display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+            font-size: 0.9rem; transition: transform 0.2s ease;
+        }
+        .history-item:hover { transform: translateX(4px); border-left-color: var(--success); background: #18181b; }
+        .history-details { color: var(--text-main); line-height: 1.6; }
+        .history-details strong { color: #ffffff; font-weight: 700; }
 
         .pdf-header { display: none; text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--primary); padding-bottom: 15px; }
-        .pdf-header h1 { font-size: 1.4rem; color: #0f172a; margin-bottom: 5px; text-transform: uppercase; }
-        .pdf-header p { font-size: 0.85rem; color: #475569; }
+        .pdf-header h1 { font-size: 1.4rem; color: #09090b; margin-bottom: 5px; text-transform: uppercase; font-weight: 800; }
+        .pdf-header p { font-size: 0.85rem; color: #52525b; }
 
-        /* Banner de instalación nativo */
-        #pwa-install-banner { display: none; background: var(--primary); color: white; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; justify-content: space-between; align-items: center; font-size: 0.85rem; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        /* Banner PWA Nativo Flotante */
+        #pwa-install-banner { 
+            display: none; background: var(--primary-gradient); color: white; 
+            padding: 14px 20px; border-radius: 12px; margin-bottom: 20px; 
+            justify-content: space-between; align-items: center; font-size: 0.9rem; 
+            box-shadow: 0 8px 20px var(--glow-primary); font-weight: 500;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
 
+    <!-- Banner PWA -->
     <div id="pwa-install-banner">
-        <span style="font-weight: 500;">✨ Puedes instalar esta planilla como una aplicación en tu dispositivo.</span>
-        <button class="btn btn-success" id="btn-pwa-instalar" style="min-width: auto; padding: 6px 14px; font-size: 0.8rem; background: #10b981;">Instalar App</button>
+        <span>✨ Instala tu Dashboard de Planilla en la pantalla de inicio.</span>
+        <button class="btn btn-success" id="btn-pwa-instalar" style="min-width: auto; padding: 8px 16px; font-size: 0.85rem; box-shadow: none;">Instalar App</button>
     </div>
 
     <div class="main-panel">
         
-        <h2>1. Configuración de Parámetros</h2>
+        <h2>1. Parámetros del Período</h2>
         <div class="grid-inputs">
             <div class="form-group">
                 <label>Nombre del Período</label>
@@ -135,11 +254,11 @@
         
         <div class="btn-group">
             <button class="btn btn-success" onclick="generarCalendarioPeriodo(false)">Generar Nueva Semana</button>
-            <button class="btn" style="background: #0284c7;" onclick="generarCalendarioPeriodo(true)">➕ Añadir días</button>
+            <button class="btn" style="background: linear-gradient(135deg, #0284c7, #0ea5e9);" onclick="generarCalendarioPeriodo(true)">➕ Añadir días</button>
             <button class="btn btn-clear-all" onclick="eliminarTodoElPeriodo()">Limpiar Pantalla</button>
         </div>
 
-        <h2>2. Registro Diario y Horarios</h2>
+        <h2>2. Control de Horarios</h2>
         <div class="table-container">
             <table id="tabla-periodo">
                 <thead>
@@ -149,17 +268,17 @@
                         <th>Entrada</th>
                         <th>Salida</th>
                         <th>Horas Extra</th>
-                        <th>Notas / Meta de ayer</th>
+                        <th>Notas / Meta</th>
                         <th style="text-align: center;">Acción</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">No se han generado días para este período.</td></tr>
+                    <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 25px; font-weight: 500;">No hay días registrados en este período. Genera una semana.</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <h2>3. Resumen de Liquidación</h2>
+        <h2>3. Dashboard de Liquidación</h2>
         <div class="payroll-box">
             <div class="payroll-column">
                 <div class="payroll-row">
@@ -174,9 +293,9 @@
                     <span>Monto por Extras:</span>
                     <span id="lbl-monto-extras">Q 0.00</span>
                 </div>
-                <div class="payroll-row" style="background: rgba(59,130,246,0.1); padding: 4px 8px; border-radius: 4px;">
+                <div class="payroll-row" style="background: rgba(59,130,246,0.1); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(59,130,246,0.2);">
                     <span style="font-weight: 600; color: var(--primary);">Horas de Apoyo:</span>
-                    <input type="number" id="param-horas-apoyo" value="0" step="0.5" style="width: 60px; padding: 2px 4px; text-align: center; font-weight: bold;" oninput="calcularTotales(); guardarEstadoActual();">
+                    <input type="number" id="param-horas-apoyo" value="0" step="0.5" style="width: 70px; padding: 4px 8px; text-align: center; font-weight: bold; background: #09090b; border:1px solid #3b82f6;" oninput="calcularTotales(); guardarEstadoActual();">
                 </div>
                 <div class="payroll-row">
                     <span>Monto por Apoyo:</span>
@@ -192,7 +311,7 @@
                     <span>Beneficios Calculados:</span>
                     <span id="lbl-beneficios">Q 0.00</span>
                 </div>
-                <div class="payroll-row">
+                <div class="payroll-row" style="border-top: 1px solid var(--panel-border); padding-top: 8px;">
                     <span>Sueldo Bruto Total:</span>
                     <span id="lbl-subtotal">Q 0.00</span>
                 </div>
@@ -201,17 +320,17 @@
                     <span id="lbl-igss" style="color: var(--danger);">-Q 0.00</span>
                 </div>
                 <div class="payroll-row" style="color: var(--danger);">
-                    <span>Retención ISR:</span>
+                    <span>Retención ISR CIBUS:</span>
                     <span id="lbl-isr" style="color: var(--danger);">-Q 0.00</span>
                 </div>
             </div>
             
             <div class="payroll-column total-highlight-col">
                 <div class="payroll-row total">
-                    <span>Total Líquido a Recibir</span>
+                    <span>Total Líquido Estimado</span>
                     <span id="lbl-total-neto">Q 0.00</span>
                 </div>
-                <button class="btn btn-success" style="margin-top: 12px; width: 100%; padding: 8px; font-size: 0.85rem;" onclick="guardarMesEnHistorial()">Cerrar y Guardar Quincena</button>
+                <button class="btn btn-success" style="margin-top: 15px; width: 100%;" onclick="guardarMesEnHistorial()">✓ Archivar Quincena</button>
             </div>
         </div>
 
@@ -219,13 +338,13 @@
 
     <div class="main-panel history-section" id="bloque-exclusivo-pdf">
         <div id="encabezado-pdf" class="pdf-header">
-            <h1>HISTORIAL DE PLANILLAS Y PERÍODOS LIQUIDADOS</h1>
-            <p>Reporte consolidado de cierres acumulados</p>
+            <h1>REPORTE DE PLANILLAS Y PERÍODOS</h1>
+            <p>Historial consolidado de cierres acumulados</p>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--panel-border); padding-bottom: 8px; margin-bottom: 16px;">
-            <h2 style="border: none; margin: 0; padding: 0;">4. Historial Guardado</h2>
-            <button class="btn" style="background: #475569; max-width: 200px; padding: 6px 12px; font-size: 0.8rem;" onclick="exportarHistorialAPDF()" data-html2canvas-ignore="true">📄 Exportar PDF</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--panel-border); padding-bottom: 12px; margin-bottom: 16px;">
+            <h2 style="border: none; margin: 0; padding: 0;">4. Archivo General</h2>
+            <button class="btn" style="background: linear-gradient(135deg, #52525b, #3f3f46); max-width: 200px; padding: 8px 16px; font-size: 0.85rem;" onclick="exportarHistorialAPDF()" data-html2canvas-ignore="true">📄 Descargar PDF</button>
         </div>
         
         <div id="lista-historial" class="history-list"></div>
@@ -309,7 +428,7 @@
             const yaExiste = periodoActual.dias.some(d => d.fecha === fechaFormateada);
             if (!yaExiste) {
                 periodoActual.dias.push({
-                    fecha: fechaFormateada, tipo: "LABORAL", entrada: "06:00", salida: "14:00", horasExtras: 0.00, notes: ""
+                    fecha: fechaFormateada, tipo: "LABORAL", entrada: "06:00", salida: "14:00", horasExtras: 0.00, notas: ""
                 });
             }
             fechaAux.setDate(fechaAux.getDate() + 1);
@@ -342,7 +461,7 @@
         tbody.innerHTML = '';
 
         if (periodoActual.dias.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">No se han generado días para este período.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 25px; font-weight: 500;">No hay días registrados en este período. Genera una semana.</td></tr>`;
             return;
         }
 
@@ -364,11 +483,11 @@
                 <td>
                     <input type="time" value="${dia.salida}" ${dia.tipo === 'DESCANSO' ? 'disabled' : ''} onchange="actualizarHorasRow(${index}, 'salida', this.value)">
                 </td>
-                <td id="row-extra-${index}" style="font-weight: 600; color: var(--success);">
+                <td id="row-extra-${index}" style="font-weight: 700; color: var(--success);">
                     ${dia.tipo === 'DESCANSO' ? '-' : dia.horasExtras.toFixed(2) + ' hrs'}
                 </td>
                 <td>
-                    <input type="text" value="${dia.notas || ''}" placeholder="..." onchange="actualizarNotasRow(${index}, this.value)" style="padding: 4px 8px; font-size: 0.8rem;">
+                    <input type="text" value="${dia.notas || ''}" placeholder="..." onchange="actualizarNotasRow(${index}, this.value)">
                 </td>
                 <td style="text-align: center;">
                     <button class="btn-danger" onclick="eliminarDiaFila(${index})">✕</button>
@@ -435,23 +554,24 @@
 
         let diasTotalesGenerados = periodoActual.dias.length || 1;
         
-        let sueldoProporcional = 0;
-        let beneficiosProporcionales = 0;
-
-        if (diasTotalesGenerados === 14 || diasTotalesGenerados === 15) {
-            sueldoProporcional = periodoActual.sueldo;
-            beneficiosProporcionales = periodoActual.beneficios;
+        let factorProporcional = 1;
+        if (diasTotalesGenerados === 14 || diasTotalesGenerados >= 15) {
+            factorProporcional = 1;
         } else {
-            let factorProporcional = diasTotalesGenerados / 15;
-            if(factorProporcional > 1) factorProporcional = 1; 
-
-            sueldoProporcional = periodoActual.sueldo * factorProporcional;
-            beneficiosProporcionales = periodoActual.beneficios * factorProporcional;
+            factorProporcional = diasTotalesGenerados / 15;
         }
 
-        sueldoProporcional = Math.round(sueldoProporcional * 100) / 100;
-        const montoExtras = Math.round((totalHorasExtras * periodoActual.horaExtraVal) * 100) / 100;
+        let sueldoProporcional = Math.round((periodoActual.sueldo * factorProporcional) * 100) / 100;
         
+        let bonoLeyQuincenal = 125;
+        let bonoExtraQuincenal = periodoActual.beneficios - bonoLeyQuincenal;
+        if (bonoExtraQuincenal < 0) bonoExtraQuincenal = 0;
+
+        let bonoLeyCalculado = Math.round((bonoLeyQuincenal * factorProporcional) * 100) / 100;
+        let bonoExtraCalculado = Math.round((bonoExtraQuincenal * factorProporcional) * 100) / 100;
+        let beneficiosProporcionales = bonoLeyCalculado + bonoExtraCalculado;
+
+        const montoExtras = Math.round((totalHorasExtras * periodoActual.horaExtraVal) * 100) / 100;
         const horasApoyoInput = parseFloat(document.getElementById('param-horas-apoyo').value) || 0;
         const montoApoyo = Math.round((horasApoyoInput * periodoActual.horaExtraVal) * 100) / 100;
 
@@ -460,11 +580,19 @@
         const baseIgss = Math.round((sueldoProporcional + montoExtras + montoApoyo) * 100) / 100;
         const igss = Math.round((baseIgss * 0.0483) * 100) / 100;
         
+        // --- MOTOR ISR CIBUS ---
+        let ingresosExtraGravados = montoExtras + montoApoyo + bonoExtraCalculado;
         let isr = 0;
-        if (subtotal > 3500) isr = 152.30;
-        else if (subtotal > 2500) isr = 35.96;
+        
+        if (ingresosExtraGravados > 0 || sueldoProporcional > 0) {
+            isr = (ingresosExtraGravados * 0.05) + 1.39;
+            if (ingresosExtraGravados > 300) {
+                isr += (ingresosExtraGravados - 300) * 0.0015;
+            }
+            isr = Math.round(isr * 100) / 100;
+        }
 
-        const liquido = subtotal - igss - isr;
+        const liquido = Math.round((subtotal - igss - isr) * 100) / 100;
 
         document.getElementById('lbl-periodo-nombre').innerText = periodoActual.nombre || "Ninguno";
         document.getElementById('lbl-total-horas-extras').innerText = `${totalHorasExtras.toFixed(2)} hrs`;
@@ -510,7 +638,7 @@
         calcularTotales();
         renderHistorial();
         
-        alert("¡Quincena unificada archivada con éxito!");
+        alert("¡Quincena archivada con éxito en tu Dashboard!");
     }
 
     function exportarHistorialAPDF() {
@@ -538,14 +666,17 @@
         tarjetasHistorial.forEach(tarjeta => {
             tarjeta.style.background = '#f8fafc';
             tarjeta.style.borderColor = '#cbd5e1';
+            tarjeta.style.boxShadow = 'none';
         });
         textosDetalles.forEach(texto => {
             texto.style.color = '#334155';
+            const strongTags = texto.querySelectorAll('strong');
+            strongTags.forEach(st => st.style.color = '#0f172a');
         });
 
         const opcionesConfig = {
             margin:       15,
-            filename:     `Historial_Planillas.pdf`,
+            filename:     `Reporte_Planillas.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { 
                 scale: 2, 
@@ -569,9 +700,12 @@
                     tarjetasHistorial.forEach(tarjeta => {
                         tarjeta.style.background = '';
                         tarjeta.style.borderColor = '';
+                        tarjeta.style.boxShadow = '';
                     });
                     textosDetalles.forEach(texto => {
                         texto.style.color = '';
+                        const strongTags = texto.querySelectorAll('strong');
+                        strongTags.forEach(st => st.style.color = '');
                     });
                 })
                 .catch(err => {
@@ -584,9 +718,12 @@
                     tarjetasHistorial.forEach(tarjeta => {
                         tarjeta.style.background = '';
                         tarjeta.style.borderColor = '';
+                        tarjeta.style.boxShadow = '';
                     });
                     textosDetalles.forEach(texto => {
                         texto.style.color = '';
+                        const strongTags = texto.querySelectorAll('strong');
+                        strongTags.forEach(st => st.style.color = '');
                     });
                 });
         }, 300);
@@ -597,7 +734,7 @@
         contenedor.innerHTML = '';
 
         if (historialCierres.length === 0) {
-            contenedor.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 15px;">No hay cierres guardados en el historial todavía.</p>`;
+            contenedor.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 15px;">Aún no hay registros guardados.</p>`;
             return;
         }
 
@@ -608,23 +745,23 @@
                 <div class="history-details">
                     <strong>Periodo ${mes.nombre}:</strong> del <span style="color: var(--primary); font-weight: 600;">${mes.desde}</span> al <span style="color: var(--primary); font-weight: 600;">${mes.hasta}</span> 
                     &nbsp;|&nbsp; Extras Totales: <strong>${mes.extras} hrs</strong> 
-                    &nbsp;|&nbsp; Total Líquido: <strong style="color: var(--success);">Q ${mes.liquido}</strong>
+                    &nbsp;|&nbsp; Líquido: <strong style="color: var(--success); font-size: 1.05rem;">Q ${mes.liquido}</strong>
                 </div>
-                <button class="btn-danger" style="padding: 4px 10px;" onclick="eliminarHistorial(${mes.id})" data-html2canvas-ignore="true">Borrar</button>
+                <button class="btn-danger" style="padding: 6px 12px;" onclick="eliminarHistorial(${mes.id})" data-html2canvas-ignore="true">Borrar</button>
             `;
             contenedor.appendChild(div);
         });
     }
 
     function eliminarHistorial(id) {
-        if (confirm("¿Deseas quitar este mes de tu historial permanente?")) {
+        if (confirm("¿Estás seguro de eliminar este registro de tu archivo?")) {
             historialCierres = historialCierres.filter(mes => mes.id !== id);
             localStorage.setItem('historialPlanillas', JSON.stringify(historialCierres));
             renderHistorial();
         }
     }
 
-    // MANEJADOR DE INSTALACIÓN PWA REAL
+    // MANEJADOR DE INSTALACIÓN PWA
     let deferredPrompt;
     const bannerInstalacion = document.getElementById('pwa-install-banner');
     const btnInstalar = document.getElementById('btn-pwa-instalar');
@@ -647,14 +784,14 @@
     window.addEventListener('appinstalled', () => {
         bannerInstalacion.style.display = 'none';
         deferredPrompt = null;
-        console.log('¡Planilla instalada en el sistema con éxito!');
+        console.log('¡App Instalada Correctamente!');
     });
 
-    // REGISTRO DEL SERVICE WORKER ACTIVO
+    // SERVICE WORKER
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             const swCodigo = `
-                const CACHE_NAME = 'planilla-cache-v1';
+                const CACHE_NAME = 'planilla-cache-v2';
                 self.addEventListener('install', (e) => { self.skipWaiting(); });
                 self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
                 self.addEventListener('fetch', (event) => {
@@ -664,8 +801,8 @@
             const blob = new Blob([swCodigo], { type: 'application/javascript' });
             const swUrl = URL.createObjectURL(blob);
             navigator.serviceWorker.register(swUrl)
-                .then(reg => console.log("Service Worker Registrado Correctamente."))
-                .catch(err => console.log("Error al registrar SW:", err));
+                .then(reg => console.log("SW Activado."))
+                .catch(err => console.log("SW Error:", err));
         });
     }
 </script>
