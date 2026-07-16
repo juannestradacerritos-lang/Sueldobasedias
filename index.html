@@ -13,8 +13,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Enlace al nuevo archivo Oficial -->
-    <link rel="manifest" href="./manifest.json">
+    <!-- Nueva identidad para burlar a Chrome -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUGxhbmlsbGEiLCJzaG9ydF9uYW1lIjoiUGxhbmlsbGEiLCJzdGFydF91cmwiOiIuLz92ZXJzaW9uPW51ZXZhX2FwcF9vZmljaWFsXzIwMjYiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3ciOiIjMDkwOTBiIiwidGhlbWVfY29sb3ciOiIjMDkwOTBiIiwiaWNvbnMiOlt7InNyYyI6Imh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzIwOTcvMjA5Nzk3NS5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIiwicHVycG9zZSI6ImFueSBtYXJrYWJsZSJ9LHsic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMjA5Ny8yMDk3OTc1LnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmciLCJwdXJwb3NlIjoiYW55IG1hc2thYmxlIn1dfQ==">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
@@ -94,15 +94,9 @@
 <body>
 
 <div class="container">
-
     <div class="app-header">
         <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="url(#shield-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <defs>
-                <linearGradient id="shield-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#3b82f6" />
-                    <stop offset="100%" stop-color="#10b981" />
-                </linearGradient>
-            </defs>
+            <defs><linearGradient id="shield-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6" /><stop offset="100%" stop-color="#10b981" /></linearGradient></defs>
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             <path d="M9 12l2 2 4-4"></path>
         </svg>
@@ -115,7 +109,6 @@
     </div>
 
     <div class="main-panel">
-        
         <h2>1. Parámetros del Período</h2>
         <div class="grid-inputs">
             <div class="form-group"><label>Nombre del Período</label><input type="text" id="param-nombre" value="Noviembre 2025" onchange="guardarEstadoActual()"></div>
@@ -175,7 +168,6 @@
                 <button class="btn btn-success" style="margin-top: 15px; width: 100%;" onclick="guardarMesEnHistorial()">✓ Archivar Quincena</button>
             </div>
         </div>
-
     </div>
 
     <div class="main-panel history-section" id="bloque-exclusivo-pdf">
@@ -189,7 +181,6 @@
         </div>
         <div id="lista-historial" class="history-list"></div>
     </div>
-
 </div>
 
 <script>
@@ -213,8 +204,7 @@
             document.getElementById('param-horas-apoyo').value = periodoActual.horasApoyo;
             document.getElementById('param-isr-activo').value = periodoActual.isrActivo ? "true" : "false";
             
-            renderTablaPeriodo();
-            calcularTotales();
+            renderTablaPeriodo(); calcularTotales();
         }
 
         document.getElementById('param-sueldo').addEventListener('input', (e) => { periodoActual.sueldo = parseFloat(e.target.value) || 0; calcularTotales(); guardarEstadoActual(); });
@@ -234,10 +224,7 @@
         const finStr = document.getElementById('param-fecha-fin').value;
 
         if (!inicioStr || !finStr || !nombre) return alert("Completa el nombre y el rango de fechas para proceder.");
-        
-        const fechaInicio = new Date(inicioStr + "T00:00:00");
-        const fechaFin = new Date(finStr + "T00:00:00");
-
+        const fechaInicio = new Date(inicioStr + "T00:00:00"), fechaFin = new Date(finStr + "T00:00:00");
         if (fechaFin < fechaInicio) return alert("La fecha final es menor que la de inicio.");
 
         periodoActual.nombre = nombre;
@@ -246,13 +233,7 @@
         periodoActual.beneficios = parseFloat(document.getElementById('param-beneficios').value) || 0;
         periodoActual.isrActivo = document.getElementById('param-isr-activo').value === "true";
         
-        if (!appendMode) {
-            periodoActual.dias = [];
-            periodoActual.fechaInicio = inicioStr;
-            periodoActual.horasApoyo = 0;
-            document.getElementById('param-horas-apoyo').value = 0;
-        }
-        
+        if (!appendMode) { periodoActual.dias = []; periodoActual.fechaInicio = inicioStr; periodoActual.horasApoyo = 0; document.getElementById('param-horas-apoyo').value = 0; }
         periodoActual.fechaFin = finStr;
 
         let fechaAux = new Date(fechaInicio);
@@ -264,30 +245,20 @@
         }
 
         periodoActual.dias.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-        renderTablaPeriodo();
-        calcularTotales();
-        guardarEstadoActual();
+        renderTablaPeriodo(); calcularTotales(); guardarEstadoActual();
     }
 
     function eliminarTodoElPeriodo() {
         if (periodoActual.dias.length === 0) return alert("No hay ningún día cargado.");
         if (confirm("¿Estás seguro de que deseas limpiar la pantalla actual?")) {
-            periodoActual.dias = [];
-            periodoActual.horasApoyo = 0;
-            document.getElementById('param-horas-apoyo').value = 0;
-            localStorage.removeItem('periodoActualGuardado');
-            renderTablaPeriodo();
-            calcularTotales();
+            periodoActual.dias = []; periodoActual.horasApoyo = 0; document.getElementById('param-horas-apoyo').value = 0; localStorage.removeItem('periodoActualGuardado');
+            renderTablaPeriodo(); calcularTotales();
         }
     }
 
     function renderTablaPeriodo() {
-        const tbody = document.querySelector('#tabla-periodo tbody');
-        tbody.innerHTML = '';
-        if (periodoActual.dias.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 25px; font-weight: 500;">No hay días registrados en este período. Genera una semana.</td></tr>`;
-            return;
-        }
+        const tbody = document.querySelector('#tabla-periodo tbody'); tbody.innerHTML = '';
+        if (periodoActual.dias.length === 0) return tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 25px; font-weight: 500;">No hay días registrados en este período. Genera una semana.</td></tr>`;
 
         periodoActual.dias.forEach((dia, index) => {
             const tr = document.createElement('tr');
@@ -313,8 +284,7 @@
     function recalcularDiaHoras(index) {
         const dia = periodoActual.dias[index];
         if (dia.tipo === 'DESCANSO') return;
-        const [hE, mE] = dia.entrada.split(':').map(Number);
-        const [hS, mS] = dia.salida.split(':').map(Number);
+        const [hE, mE] = dia.entrada.split(':').map(Number); const [hS, mS] = dia.salida.split(':').map(Number);
         let deminutos = hE * 60 + mE, dminutos = hS * 60 + mS;
         if (dminutos < deminutos) dminutos += 24 * 60;
         let totalHoras = (dminutos - deminutos) / 60;
@@ -339,8 +309,7 @@
         const subtotal = Math.round((sueldoProporcional + montoExtras + montoApoyo + beneficiosProporcionales) * 100) / 100;
         const igss = Math.round(((sueldoProporcional + montoExtras + montoApoyo) * 0.0483) * 100) / 100;
         
-        let isr = 0;
-        let ingresosExtraGravados = montoExtras + montoApoyo + Math.round((bonoExtraQuincenal * factorProporcional) * 100) / 100;
+        let isr = 0; let ingresosExtraGravados = montoExtras + montoApoyo + Math.round((bonoExtraQuincenal * factorProporcional) * 100) / 100;
         
         if (document.getElementById('param-isr-activo').value === "true" && (ingresosExtraGravados > 0 || sueldoProporcional > 0)) {
             isr = (ingresosExtraGravados * 0.05) + 1.39;
@@ -406,12 +375,20 @@
     btnInstalar.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; bannerInstalacion.style.display = 'none'; deferredPrompt = null; });
     window.addEventListener('appinstalled', () => { bannerInstalacion.style.display = 'none'; deferredPrompt = null; });
 
-    // Carga de Service Worker Oficial Externo
+    // Service Worker Interno (Nueva Versión 2026 para forzar cache nueva)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log("SW Oficial Activado."))
-                .catch(err => console.log("SW Error:", err));
+            const swCodigo = `
+                const CACHE_NAME = 'planilla-oficial-2026';
+                self.addEventListener('install', (e) => { self.skipWaiting(); });
+                self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+                });
+            `;
+            const blob = new Blob([swCodigo], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).then(reg => console.log("SW Activado.")).catch(err => console.log("SW Error:", err));
         });
     }
 </script>
