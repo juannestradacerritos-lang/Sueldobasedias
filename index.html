@@ -8,12 +8,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Planilla">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2097/2097975.png">
     <meta name="theme-color" content="#09090b">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- ENLACE DINÁMICO (El mismo truco maestro de los Muffins) -->
+    <!-- ENLACE DINÁMICO PWA -->
     <link rel="manifest" id="manifest">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -196,16 +195,9 @@
         "background_color": "#09090b",
         "theme_color": "#09090b",
         "icons": [{
-            "src": "https://cdn-icons-png.flaticon.com/512/2097/2097975.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "https://cdn-icons-png.flaticon.com/512/2097/2097975.png",
+            "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5SAPC90ZXh0Pjwvc3ZnPg==",
             "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/svg+xml"
         }]
     };
     const manifestBlob = new Blob([JSON.stringify(manifestApp)], {type: 'application/manifest+json'});
@@ -214,9 +206,7 @@
     const swCode = `
         self.addEventListener('install', e => self.skipWaiting());
         self.addEventListener('activate', e => e.waitUntil(clients.claim()));
-        self.addEventListener('fetch', e => {
-            e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-        });
+        self.addEventListener('fetch', e => {});
     `;
     const swBlob = new Blob([swCode], {type: 'text/javascript'});
     if ('serviceWorker' in navigator) {
