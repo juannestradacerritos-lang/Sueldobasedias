@@ -17,8 +17,8 @@
     <!-- Fuente moderna estilo Dashboard Financiero -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Manifiesto PWA -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJkZWZhdWx0X2xvY2FsZSI6ICJlcyIsCiAgIm5hbWUiOiAiUGxhbmlsbGEiLAogICJzaG9ydF9uYW1lIjogIlBsYW5pbGxhIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQtcHJpbWFyeSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzA5MDkwYiIsCiAgInRoZW1lX2NvbG9yIjogIiMwOTA5MGIiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yMDk3LzIwOTc5NzUucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAicHVycG9zZSI6ICJhbnkgbWFza2FibGUiCiAgICB9CiAgXQp9">
+    <!-- Manifiesto PWA V3 (Firma renovada para obligar la instalación) -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJkZWZhdWx0X2xvY2FsZSI6ICJlcyIsCiAgIm5hbWUiOiAiUGxhbmlsbGEiLAogICJzaG9ydF9uYW1lIjogIlBsYW5pbGxhIiwKICAic3RhcnRfdXJsIjogIi4vP3Y9MyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0LXByaW1hcnkiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwOTA5MGIiLAogICJ0aGVtZV9jb2xvcciOiAiIzA5MDkwYiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzIwOTcvMjA5Nzk3NS5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXJrYWJsZSIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMjY4NC8yNjg0MjE0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
@@ -730,11 +730,11 @@
         console.log('¡App Instalada Correctamente!');
     });
 
-    // SERVICE WORKER
+    // SERVICE WORKER - VERSIÓN LIMPIA PARA FORZAR INSTALACIÓN NUEVA
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             const swCodigo = `
-                const CACHE_NAME = 'planilla-cache-v2';
+                const CACHE_NAME = 'planilla-cache-v3';
                 self.addEventListener('install', (e) => { self.skipWaiting(); });
                 self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
                 self.addEventListener('fetch', (event) => {
