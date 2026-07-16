@@ -3,28 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Asistencia y Planilla Unificada</title>
+    <title>Planilla</title>
     
     <!-- Configuración para compatibilidad PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Planilla">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2684/2684214.png">
+    
+    <!-- Ícono de Escudo de Seguridad -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2097/2097975.png">
     <meta name="theme-color" content="#09090b">
     
     <!-- Fuente moderna estilo Dashboard Financiero -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Manifiesto PWA -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJkZWZhdWx0X2xvY2FsZSI6ICJlcyIsCiAgIm5hbWUiOiAiQ29udHJvbCBkZSBBc2lzdGVuY2lhIHkgUGxhbmlsbGEiLAogICJzaG9ydF9uYW1lIjogIlBsYW5pbGxhIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQtcHJpbWFyeSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzA5MDkwYiIsCiAgInRoZW1lX2NvbG9yIjogIiMwOTA5MGIiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yNjg0LzI2ODQyMTQucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidXJwb3NlIjogImFueSBtYXJrYWJsZSIKICAgIH0KICBdCn0=">
+    <link rel="manifest" href="data:application/json;base64,ewogICJkZWZhdWx0X2xvY2FsZSI6ICJlcyIsCiAgIm5hbWUiOiAiUGxhbmlsbGEiLAogICJzaG9ydF9uYW1lIjogIlBsYW5pbGxhIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQtcHJpbWFyeSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzA5MDkwYiIsCiAgInRoZW1lX2NvbG9yIjogIiMwOTA5MGIiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yMDk3LzIwOTc5NzUucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAicHVycG9zZSI6ICJhbnkgbWFza2FibGUiCiAgICB9CiAgXQp9">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             /* Paleta Fintech Dark */
-            --bg: #09090b; /* Zinc 950 */
-            --panel-bg: #18181b; /* Zinc 900 */
-            --panel-border: #27272a; /* Zinc 800 */
+            --bg: #09090b; 
+            --panel-bg: #18181b; 
+            --panel-border: #27272a; 
             
             /* Colores de acento */
             --primary: #3b82f6; 
@@ -39,8 +41,8 @@
             --danger-gradient: linear-gradient(135deg, #e11d48, #f43f5e);
             
             /* Textos */
-            --text-main: #f4f4f5; /* Zinc 100 */
-            --text-muted: #a1a1aa; /* Zinc 400 */
+            --text-main: #f4f4f5; 
+            --text-muted: #a1a1aa; 
             
             --input-bg: #09090b;
         }
@@ -50,91 +52,40 @@
         
         .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
         
-        /* Paneles Estilo Cristal */
-        .main-panel { 
-            background: var(--panel-bg); 
-            border: 1px solid var(--panel-border); 
-            padding: 28px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3); 
-            position: relative;
-            overflow: hidden;
-        }
+        /* App Header Logo */
+        .app-header { text-align: center; margin-bottom: 10px; animation: fadeIn 0.8s ease; }
+        .app-header svg { filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); margin-bottom: 8px; }
+        .app-header h1 { font-size: 1.6rem; font-weight: 800; color: #ffffff; letter-spacing: -0.03em; }
         
-        /* Titulos elegantes */
-        h2 { 
-            color: #ffffff; 
-            font-size: 1.15rem; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 0.08em; 
-            border-bottom: 2px solid var(--panel-border); 
-            padding-bottom: 10px; 
-            margin-top: 32px; 
-            margin-bottom: 20px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Paneles Estilo Cristal */
+        .main-panel { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 28px; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3); position: relative; overflow: hidden; }
+        
+        h2 { color: #ffffff; font-size: 1.15rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 2px solid var(--panel-border); padding-bottom: 10px; margin-top: 32px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         h2:first-of-type { margin-top: 0; }
         
-        /* Grid y Formularios flotantes */
         .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 20px; }
         .form-group { display: flex; flex-direction: column; gap: 8px; }
         label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
         
-        input, select { 
-            padding: 10px 14px; 
-            border: 1px solid var(--panel-border); 
-            border-radius: 8px; 
-            font-size: 0.95rem; 
-            font-weight: 500;
-            color: var(--text-main); 
-            background-color: var(--input-bg); 
-            transition: all 0.3s ease; 
-            width: 100%; 
-        }
-        input:focus, select:focus { 
-            outline: none; 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 4px var(--glow-primary); 
-            transform: translateY(-1px);
-        }
+        input, select { padding: 10px 14px; border: 1px solid var(--panel-border); border-radius: 8px; font-size: 0.95rem; font-weight: 500; color: var(--text-main); background-color: var(--input-bg); transition: all 0.3s ease; width: 100%; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--glow-primary); transform: translateY(-1px); }
         
-        /* Botones Neón */
         .btn-group { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-        .btn { 
-            display: inline-flex; align-items: center; justify-content: center; 
-            background: var(--primary-gradient); 
-            color: white; 
-            padding: 12px 24px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            font-size: 0.9rem; 
-            letter-spacing: 0.03em;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            flex: 1; min-width: 170px; text-align: center; 
-            box-shadow: 0 4px 12px var(--glow-primary);
-        }
+        .btn { display: inline-flex; align-items: center; justify-content: center; background: var(--primary-gradient); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.03em; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); flex: 1; min-width: 170px; text-align: center; box-shadow: 0 4px 12px var(--glow-primary); }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px var(--glow-primary); filter: brightness(1.1); }
         .btn:active { transform: scale(0.97); }
         
         .btn-success { background: var(--success-gradient); box-shadow: 0 4px 12px var(--glow-success); }
         .btn-success:hover { box-shadow: 0 6px 16px var(--glow-success); }
         
-        .btn-danger { 
-            background: var(--danger-gradient); color: white; border: none; padding: 6px 12px; 
-            border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; 
-            transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(244, 63, 94, 0.3);
-        }
+        .btn-danger { background: var(--danger-gradient); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(244, 63, 94, 0.3); }
         .btn-danger:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(244, 63, 94, 0.5); }
         
         .btn-clear-all { background: linear-gradient(135deg, #3f3f46, #52525b); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         .btn-clear-all:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.4); }
         
-        /* Tabla DataGrid Avanzada */
         .table-container { overflow-x: auto; border: 1px solid var(--panel-border); border-radius: 12px; margin-top: 10px; background: var(--input-bg); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #1f1f22; transition: background 0.2s ease; }
@@ -145,54 +96,21 @@
         .descanso-row td { background-color: rgba(39, 39, 42, 0.3)!important; color: #52525b; }
         .descanso-row input, .descanso-row select { opacity: 0.4; filter: grayscale(1); }
         
-        /* Caja de Nómina Estilo Banca Digital */
-        .payroll-box { 
-            background: linear-gradient(to bottom right, #121214, #09090b); 
-            border: 1px solid var(--panel-border); 
-            border-radius: 12px; 
-            padding: 20px; 
-            margin-top: 15px; 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-            gap: 20px; 
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-        }
+        .payroll-box { background: linear-gradient(to bottom right, #121214, #09090b); border: 1px solid var(--panel-border); border-radius: 12px; padding: 20px; margin-top: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.4); }
         .payroll-column { display: flex; flex-direction: column; gap: 10px; }
         .payroll-row { display: flex; justify-content: space-between; font-size: 0.95rem; border-bottom: 1px dashed var(--panel-border); padding-bottom: 8px; align-items: center; }
         .payroll-row span:first-child { color: var(--text-muted); font-weight: 500; }
         .payroll-row span:last-child { font-weight: 700; color: var(--text-main); }
         
-        /* Resaltado del Total Líquido */
-        .total-highlight-col { 
-            justify-content: center; 
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(16, 185, 129, 0.05)); 
-            border: 1px solid rgba(59, 130, 246, 0.2); 
-            padding: 20px; 
-            border-radius: 12px; 
-            position: relative;
-        }
-        .total-highlight-col::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--success));
-            border-top-left-radius: 12px; border-top-right-radius: 12px;
-        }
+        .total-highlight-col { justify-content: center; background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(59, 130, 246, 0.2); padding: 20px; border-radius: 12px; position: relative; }
+        .total-highlight-col::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--primary), var(--success)); border-top-left-radius: 12px; border-top-right-radius: 12px; }
         .payroll-row.total { font-weight: 800; border: none; padding-bottom: 0; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
         .payroll-row.total span:first-child { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary); }
         .payroll-row.total span:last-child { font-size: 2.2rem; color: #ffffff; text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); letter-spacing: -0.02em; }
         
-        /* Historial y PDF */
         .history-section { padding-top: 24px; }
         .history-list { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
-        .history-item { 
-            padding: 16px 20px; 
-            border: 1px solid var(--panel-border); 
-            border-left: 4px solid var(--primary);
-            border-radius: 10px; 
-            background: #121214; 
-            display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
-            font-size: 0.9rem; transition: transform 0.2s ease;
-        }
+        .history-item { padding: 16px 20px; border: 1px solid var(--panel-border); border-left: 4px solid var(--primary); border-radius: 10px; background: #121214; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 0.9rem; transition: transform 0.2s ease; }
         .history-item:hover { transform: translateX(4px); border-left-color: var(--success); background: #18181b; }
         .history-details { color: var(--text-main); line-height: 1.6; }
         .history-details strong { color: #ffffff; font-weight: 700; }
@@ -201,18 +119,27 @@
         .pdf-header h1 { font-size: 1.4rem; color: #09090b; margin-bottom: 5px; text-transform: uppercase; font-weight: 800; }
         .pdf-header p { font-size: 0.85rem; color: #52525b; }
 
-        /* Banner PWA Nativo Flotante */
-        #pwa-install-banner { 
-            display: none; background: var(--primary-gradient); color: white; 
-            padding: 14px 20px; border-radius: 12px; margin-bottom: 20px; 
-            justify-content: space-between; align-items: center; font-size: 0.9rem; 
-            box-shadow: 0 8px 20px var(--glow-primary); font-weight: 500;
-        }
+        #pwa-install-banner { display: none; background: var(--primary-gradient); color: white; padding: 14px 20px; border-radius: 12px; margin-bottom: 20px; justify-content: space-between; align-items: center; font-size: 0.9rem; box-shadow: 0 8px 20px var(--glow-primary); font-weight: 500; }
     </style>
 </head>
 <body>
 
 <div class="container">
+
+    <!-- Encabezado Visual de la App con Escudo (Reducido) -->
+    <div class="app-header">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="url(#shield-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <defs>
+                <linearGradient id="shield-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#3b82f6" />
+                    <stop offset="100%" stop-color="#10b981" />
+                </linearGradient>
+            </defs>
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4"></path>
+        </svg>
+        <h1>PLANILLA</h1>
+    </div>
 
     <!-- Banner PWA -->
     <div id="pwa-install-banner">
@@ -237,6 +164,7 @@
                 <input type="date" id="param-fecha-fin" value="2025-11-15" onchange="guardarEstadoActual()">
             </div>
         </div>
+        
         <div class="grid-inputs">
             <div class="form-group">
                 <label>Sueldo Ordinario Quincenal</label>
@@ -249,6 +177,14 @@
             <div class="form-group">
                 <label>Beneficios MCD Quincenal</label>
                 <input type="number" id="param-beneficios" value="175.00" step="0.01">
+            </div>
+            <!-- Interruptor ISR -->
+            <div class="form-group">
+                <label style="color: var(--primary);">Cobro de ISR</label>
+                <select id="param-isr-activo" onchange="calcularTotales(); guardarEstadoActual()" style="border-color: rgba(59,130,246,0.5);">
+                    <option value="true">Sí (Cálculo Normal)</option>
+                    <option value="false">No (Mes de Ajuste / Exento)</option>
+                </select>
             </div>
         </div>
         
@@ -320,7 +256,7 @@
                     <span id="lbl-igss" style="color: var(--danger);">-Q 0.00</span>
                 </div>
                 <div class="payroll-row" style="color: var(--danger);">
-                    <span>Retención ISR CIBUS:</span>
+                    <span>Retención ISR:</span>
                     <span id="lbl-isr" style="color: var(--danger);">-Q 0.00</span>
                 </div>
             </div>
@@ -354,7 +290,7 @@
 
 <script>
     let periodoActual = {
-        nombre: "", fechaInicio: "", fechaFin: "", sueldo: 2052.50, horaExtraVal: 25.6563, beneficios: 175.00, horasApoyo: 0, dias: []
+        nombre: "", fechaInicio: "", fechaFin: "", sueldo: 2052.50, horaExtraVal: 25.6563, beneficios: 175.00, horasApoyo: 0, isrActivo: true, dias: []
     };
 
     let historialCierres = JSON.parse(localStorage.getItem('historialPlanillas')) || [];
@@ -366,6 +302,7 @@
         if (estadoGuardado) {
             periodoActual = JSON.parse(estadoGuardado);
             if(periodoActual.horasApoyo === undefined) periodoActual.horasApoyo = 0;
+            if(periodoActual.isrActivo === undefined) periodoActual.isrActivo = true;
 
             document.getElementById('param-nombre').value = periodoActual.nombre || "";
             document.getElementById('param-fecha-inicio').value = periodoActual.fechaInicio || "";
@@ -374,6 +311,7 @@
             document.getElementById('param-hora-extra-val').value = periodoActual.horaExtraVal;
             document.getElementById('param-beneficios').value = periodoActual.beneficios;
             document.getElementById('param-horas-apoyo').value = periodoActual.horasApoyo;
+            document.getElementById('param-isr-activo').value = periodoActual.isrActivo ? "true" : "false";
             
             renderTablaPeriodo();
             calcularTotales();
@@ -386,6 +324,7 @@
 
     function guardarEstadoActual() {
         periodoActual.horasApoyo = parseFloat(document.getElementById('param-horas-apoyo').value) || 0;
+        periodoActual.isrActivo = document.getElementById('param-isr-activo').value === "true";
         localStorage.setItem('periodoActualGuardado', JSON.stringify(periodoActual));
     }
 
@@ -411,6 +350,7 @@
         periodoActual.sueldo = parseFloat(document.getElementById('param-sueldo').value) || 0;
         periodoActual.horaExtraVal = parseFloat(document.getElementById('param-hora-extra-val').value) || 0;
         periodoActual.beneficios = parseFloat(document.getElementById('param-beneficios').value) || 0;
+        periodoActual.isrActivo = document.getElementById('param-isr-activo').value === "true";
         
         if (!appendMode) {
             periodoActual.dias = [];
@@ -554,8 +494,9 @@
 
         let diasTotalesGenerados = periodoActual.dias.length || 1;
         
+        // 14 o 15 días mantienen la quincena. Menos o MÁS días calculan la proporción exacta.
         let factorProporcional = 1;
-        if (diasTotalesGenerados === 14 || diasTotalesGenerados >= 15) {
+        if (diasTotalesGenerados === 14 || diasTotalesGenerados === 15) {
             factorProporcional = 1;
         } else {
             factorProporcional = diasTotalesGenerados / 15;
@@ -580,11 +521,13 @@
         const baseIgss = Math.round((sueldoProporcional + montoExtras + montoApoyo) * 100) / 100;
         const igss = Math.round((baseIgss * 0.0483) * 100) / 100;
         
-        // --- MOTOR ISR CIBUS ---
+        // --- MOTOR ISR CIBUS CON INTERRUPTOR ---
         let ingresosExtraGravados = montoExtras + montoApoyo + bonoExtraCalculado;
         let isr = 0;
         
-        if (ingresosExtraGravados > 0 || sueldoProporcional > 0) {
+        const aplicarIsr = document.getElementById('param-isr-activo').value === "true";
+        
+        if (aplicarIsr && (ingresosExtraGravados > 0 || sueldoProporcional > 0)) {
             isr = (ingresosExtraGravados * 0.05) + 1.39;
             if (ingresosExtraGravados > 300) {
                 isr += (ingresosExtraGravados - 300) * 0.0015;
