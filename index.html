@@ -13,8 +13,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- DPI DIGITAL ÚNICO PARA QUE CHROME LA RECONOZCA COMO APP NUEVA -->
-    <link rel="manifest" href="data:application/json;base64,eyJpZCI6ImFwcF9jb250cm9sX3BsYW5pbGxhX2p1YW4iLCJuYW1lIjoiUGxhbmlsbGEiLCJzaG9ydF9uYW1lIjoiUGxhbmlsbGEiLCJzdGFydF91cmwiOiIuLyIsInNjb3BlIjoiLi8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3ciOiIjMDkwOTBiIiwidGhlbWVfY29sb3ciOiIjMDkwOTBiIiwiaWNvbnMiOlt7InNyYyI6Imh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzIwOTcvMjA5Nzk3NS5wbmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIiwicHVycG9zZSI6ImFueSBtYXJrYWJsZSJ9LHsic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMjA5Ny8yMDk3OTc1LnBuZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmciLCJwdXJwb3NlIjoiYW55IG1hc2thYmxlIn1dfQ==">
+    <!-- ENLACE DINÁMICO (El mismo truco maestro de los Muffins) -->
+    <link rel="manifest" id="manifest">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
@@ -184,6 +184,54 @@
 </div>
 
 <script>
+    // ==========================================
+    // MAGIA PWA (BLOB) APLICADA A LA PLANILLA
+    // ==========================================
+    const manifestApp = {
+        "id": "planilla_definitiva_app_2026",
+        "name": "Planilla",
+        "short_name": "Planilla",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#09090b",
+        "theme_color": "#09090b",
+        "icons": [{
+            "src": "https://cdn-icons-png.flaticon.com/512/2097/2097975.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/2097/2097975.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }]
+    };
+    const manifestBlob = new Blob([JSON.stringify(manifestApp)], {type: 'application/manifest+json'});
+    document.getElementById('manifest').href = URL.createObjectURL(manifestBlob);
+
+    const swCode = `
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+        self.addEventListener('fetch', e => {
+            e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+        });
+    `;
+    const swBlob = new Blob([swCode], {type: 'text/javascript'});
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(console.error);
+    }
+
+    // Instalación
+    let deferredPrompt; const bannerInstalacion = document.getElementById('pwa-install-banner'), btnInstalar = document.getElementById('btn-pwa-instalar');
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; bannerInstalacion.style.display = 'flex'; });
+    btnInstalar.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; bannerInstalacion.style.display = 'none'; deferredPrompt = null; });
+    window.addEventListener('appinstalled', () => { bannerInstalacion.style.display = 'none'; deferredPrompt = null; });
+
+    // ==========================================
+    // FUNCIONALIDAD DE LA PLANILLA
+    // ==========================================
     let periodoActual = { nombre: "", fechaInicio: "", fechaFin: "", sueldo: 2052.50, horaExtraVal: 25.6563, beneficios: 175.00, horasApoyo: 0, isrActivo: true, dias: [] };
     let historialCierres = JSON.parse(localStorage.getItem('historialPlanillas')) || [];
 
@@ -369,27 +417,6 @@
     }
 
     function eliminarHistorial(id) { if (confirm("¿Eliminar este registro?")) { historialCierres = historialCierres.filter(mes => mes.id !== id); localStorage.setItem('historialPlanillas', JSON.stringify(historialCierres)); renderHistorial(); } }
-
-    let deferredPrompt; const bannerInstalacion = document.getElementById('pwa-install-banner'), btnInstalar = document.getElementById('btn-pwa-instalar');
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; bannerInstalacion.style.display = 'flex'; });
-    btnInstalar.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; bannerInstalacion.style.display = 'none'; deferredPrompt = null; });
-    window.addEventListener('appinstalled', () => { bannerInstalacion.style.display = 'none'; deferredPrompt = null; });
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            const swCodigo = `
-                const CACHE_NAME = 'planilla-oficial-id-unica-1';
-                self.addEventListener('install', (e) => { self.skipWaiting(); });
-                self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
-                self.addEventListener('fetch', (event) => {
-                    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
-                });
-            `;
-            const blob = new Blob([swCodigo], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).then(reg => console.log("SW Activado.")).catch(err => console.log("SW Error:", err));
-        });
-    }
 </script>
 
 </body>
