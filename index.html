@@ -13,8 +13,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Nueva identidad para burlar a Chrome -->
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUGxhbmlsbGEiLCJzaG9ydF9uYW1lIjoiUGxhbmlsbGEiLCJzdGFydF91cmwiOiIuLz92ZXJzaW9uPW51ZXZhX2FwcF9vZmljaWFsXzIwMjYiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3ciOiIjMDkwOTBiIiwidGhlbWVfY29sb3ciOiIjMDkwOTBiIiwiaWNvbnMiOlt7InNyYyI6Imh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzIwOTcvMjA5Nzk3NS5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIiwicHVycG9zZSI6ImFueSBtYXJrYWJsZSJ9LHsic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMjA5Ny8yMDk3OTc1LnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmciLCJwdXJwb3NlIjoiYW55IG1hc2thYmxlIn1dfQ==">
+    <!-- NUEVA IDENTIDAD SECRETA (Planilla VIP 2026) PARA OBLIGAR A CHROME A INSTALAR -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUGxhbmlsbGEgVklQIiwic2hvcnRfbmFtZSI6IlBsYW5pbGxhIFZJUCIsInN0YXJ0X3VybCI6Ij9hcHA9dmlwXzIwMjYiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3ciOiIjMDkwOTBiIiwidGhlbWVfY29sb3ciOiIjMDkwOTBiIiwiaWNvbnMiOlt7InNyYyI6Imh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzIwOTcvMjA5Nzk3NS5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIiwicHVycG9zZSI6ImFueSBtYXJrYWJsZSJ9LHsic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMjA5Ny8yMDk3OTc1LnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmciLCJwdXJwb3NlIjoiYW55IG1hc2thYmxlIn1dfQ==">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
@@ -375,11 +375,11 @@
     btnInstalar.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; bannerInstalacion.style.display = 'none'; deferredPrompt = null; });
     window.addEventListener('appinstalled', () => { bannerInstalacion.style.display = 'none'; deferredPrompt = null; });
 
-    // Service Worker Interno (Nueva Versión 2026 para forzar cache nueva)
+    // Motor Offline Camuflado - Versión VIP 2026
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             const swCodigo = `
-                const CACHE_NAME = 'planilla-oficial-2026';
+                const CACHE_NAME = 'planilla-vip-2026-v1';
                 self.addEventListener('install', (e) => { self.skipWaiting(); });
                 self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
                 self.addEventListener('fetch', (event) => {
